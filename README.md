@@ -1,21 +1,21 @@
-# VOICEVOX運用環境について
-
-## ローカルでサーバーを立ち上げて動かす
-
-以下のコマンドを実行してローカルでサーバーを立てることでローカルでAPIを実行することができる
-
-```
-docker pull voicevox/voicevox_engine:cpu-latest
-docker run --rm -it -p '127.0.0.1:50021:50021' voicevox/voicevox_engine:cpu-latest
+```txt
+npm install
+npm run dev
 ```
 
-詳しくは [こちら](https://hub.docker.com/r/voicevox/voicevox_engine) を参照
+```txt
+npm run deploy
+```
 
-## 公開サーバー上でAPIとして動かす
+[For generating/synchronizing types based on your Worker configuration run](https://developers.cloudflare.com/workers/wrangler/commands/#types):
 
-GCP Cloud Runにて稼働中
-Cloud Runにて稼働している様子やコンソールの確認は [こちら](https://console.cloud.google.com/run?hl=ja) にアクセスして確認してください
+```txt
+npm run cf-typegen
+```
 
-## 参考
+Pass the `CloudflareBindings` as generics when instantiation `Hono`:
 
-* [GCPでVOICEVOXを動かす](https://zenn.dev/yunkai/articles/gcp-voicevox)
+```ts
+// src/index.ts
+const app = new Hono<{ Bindings: CloudflareBindings }>()
+```
