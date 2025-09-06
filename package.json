@@ -7,6 +7,8 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
+    "google-auth-library": "^10.3.0",
+    "googleapis": "^159.0.0",
     "hono": "^4.9.6"
   },
   "devDependencies": {
