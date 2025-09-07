@@ -1,6 +1,6 @@
-import { Hono } from 'hono';
+import { Hono, Context } from 'hono';
 import { env } from 'hono/adapter';
-import url from 'node:url';
+import crypto from "crypto";
 import { GenerateAuthUrlOpts, OAuth2ClientOptions, OAuth2Client, Credentials } from 'google-auth-library';
 
 const googleRouter = new Hono();
@@ -9,13 +9,27 @@ googleRouter.get('/', (c) => {
   return c.json({ hello: 'oauth google Router' });
 });
 
+googleRouter.get('/usercheck', (c) => {
+  const newUuid = crypto.randomUUID();
+  return c.json({ userId: newUuid });
+});
+
 googleRouter.get('/auth', (c) => {
-  const envConfigs = env(c);
+  const oauth2Client = getOAuth2Client(c);
   const oauthClientAuthUrlOptions: GenerateAuthUrlOpts = {
     access_type: 'offline',
     scope: ['https://www.googleapis.com/auth/tasks.readonly'],
   };
-  const currentUrl = new URL(c.req.url);
+  return c.redirect(oauth2Client.generateAuthUrl(oauthClientAuthUrlOptions));
+});
+
+googleRouter.get('/callback', (c) => {
+  return c.json({ hello: 'success' });
+});
+
+function getOAuth2Client(context: Context): OAuth2Client {
+  const envConfigs = env(context);
+  const currentUrl = new URL(context.req.url);
   currentUrl.pathname = `/oauth/google/callback`;
   const globalOauth2ClientSettings: OAuth2ClientOptions = {
     clientId: envConfigs.GOOGLE_API_OAUTH2_CLIENT_ID?.toString(),
@@ -23,11 +37,7 @@ googleRouter.get('/auth', (c) => {
     redirectUri: currentUrl.toString(),
   };
   const oauth2Client = new OAuth2Client(globalOauth2ClientSettings);
-  return c.redirect(oauth2Client.generateAuthUrl(oauthClientAuthUrlOptions));
-});
-
-googleRouter.get('/callback', (c) => {
-  return c.json({ hello: 'success' });
-});
+  return oauth2Client;
+}
 
 export { googleRouter };
