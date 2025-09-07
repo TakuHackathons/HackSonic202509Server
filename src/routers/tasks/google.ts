@@ -51,7 +51,7 @@ googleTasksRouter.get('/message/completes', async (c) => {
   }
   const ai = new GoogleGenAI({ apiKey: envConfigs.GOOGLE_API_KEY?.toString() });
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-2.0-flash-lite-001',
     contents: `以降に1行ごとにタスクを紹介します。これらのタスクを完了しました。タスクの内容を踏まえて若い女の子が褒めてくれるようなメッセージを端的に返してください。\n${completedTasks.map((completedTask) => completedTask.title).join('\n')}`,
   });
   return c.json({
@@ -80,7 +80,7 @@ googleTasksRouter.get('/message/complete', async (c) => {
   }
   const ai = new GoogleGenAI({ apiKey: envConfigs.GOOGLE_API_KEY?.toString() });
   const response = await ai.models.generateContent({
-    model: 'gemini-2.5-flash',
+    model: 'gemini-2.0-flash-lite-001',
     contents: `以降に1行ごとにタスクを紹介します。これらのタスクを完了しました。タスクの内容を踏まえて若い女の子が褒めてくれるようなメッセージを端的に返してください。\n${completedTasks.map((completedTask) => completedTask.title).join('\n')}`,
   });
   const targetTask = completedTasks[Math.floor(Math.random() * completedTasks.length)];
