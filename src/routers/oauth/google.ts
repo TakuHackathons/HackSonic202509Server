@@ -1,7 +1,7 @@
 import { Hono, Context } from 'hono';
 import { env } from 'hono/adapter';
 import crypto from 'crypto';
-import { GenerateAuthUrlOpts, OAuth2ClientOptions, OAuth2Client, Credentials } from 'google-auth-library';
+import { getOAuth2Client } from '../../utils/google-oauth2-client';
 
 const oauthGoogleRouter = new Hono();
 
@@ -37,19 +37,5 @@ oauthGoogleRouter.get('/callback', async (c) => {
     return c.redirect('/oauth/google/error');
   }
 });
-
-function getOAuth2Client(context: Context): OAuth2Client {
-  const envConfigs = env(context);
-  const currentUrl = new URL(context.req.url);
-  currentUrl.pathname = `/oauth/google/callback`;
-  currentUrl.search = '';
-  const globalOauth2ClientSettings: OAuth2ClientOptions = {
-    clientId: envConfigs.GOOGLE_API_OAUTH2_CLIENT_ID?.toString(),
-    clientSecret: envConfigs.GOOGLE_API_OAUTH2_CLIENT_SECRET?.toString(),
-    redirectUri: currentUrl.toString(),
-  };
-  const oauth2Client = new OAuth2Client(globalOauth2ClientSettings);
-  return oauth2Client;
-}
 
 export { oauthGoogleRouter };
