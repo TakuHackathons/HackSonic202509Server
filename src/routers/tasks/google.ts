@@ -3,10 +3,12 @@ import crypto from 'crypto';
 import { env } from 'hono/adapter';
 import { getOauth2ClientSettings } from '../../utils/google-oauth2-client';
 import { google } from 'googleapis';
+import { GoogleGenAI } from '@google/genai';
 
 const googleTasksRouter = new Hono();
 
-googleTasksRouter.get('/', (c) => {
+googleTasksRouter.get('/', async (c) => {
+  const envConfigs = env(c);
   return c.json({ hello: 'tasks google Router' });
 });
 
@@ -47,9 +49,13 @@ googleTasksRouter.get('/message/completes', async (c) => {
       }
     }
   }
-  const messageText = `すごい!!${completedTasks.length}件もタスクを完了したんだね!!`;
+  const ai = new GoogleGenAI({ apiKey: envConfigs.GOOGLE_API_KEY?.toString() });
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: `以降に1行ごとにタスクを紹介します。これらのタスクを完了しました。タスクの内容を踏まえて若い女の子が褒めてくれるようなメッセージを端的に返してください。\n${completedTasks.map((completedTask) => completedTask.title).join('\n')}`,
+  });
   return c.json({
-    message: messageText,
+    message: response.text,
     targetTasks: completedTasks,
   });
 });
@@ -72,10 +78,15 @@ googleTasksRouter.get('/message/complete', async (c) => {
       }
     }
   }
+  const ai = new GoogleGenAI({ apiKey: envConfigs.GOOGLE_API_KEY?.toString() });
+  const response = await ai.models.generateContent({
+    model: 'gemini-2.5-flash',
+    contents: `以降に1行ごとにタスクを紹介します。これらのタスクを完了しました。タスクの内容を踏まえて若い女の子が褒めてくれるようなメッセージを端的に返してください。\n${completedTasks.map((completedTask) => completedTask.title).join('\n')}`,
+  });
   const targetTask = completedTasks[Math.floor(Math.random() * completedTasks.length)];
-  const messageText = `やったね!!${targetTask.title}を終わらせたんだね!!`;
+  //  const messageText = `やったね!!${targetTask.title}を終わらせたんだね!!`;
   return c.json({
-    message: messageText,
+    message: response.text,
     targetTask: targetTask,
   });
 });
