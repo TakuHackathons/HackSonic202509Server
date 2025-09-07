@@ -2,6 +2,7 @@ import { Hono, Context } from 'hono';
 import { env } from 'hono/adapter';
 import crypto from 'crypto';
 import { getOAuth2Client } from '../../utils/google-oauth2-client';
+import { GenerateAuthUrlOpts } from 'google-auth-library';
 
 const oauthGoogleRouter = new Hono();
 
