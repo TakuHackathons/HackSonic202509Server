@@ -33,7 +33,7 @@ oauthGoogleRouter.get('/callback', async (c) => {
   const authCode = c.req.query('code');
   if (authCode) {
     const results = await oauth2Client.getToken(authCode);
-    return c.json(results);
+    return c.text("タスクと連携できました!!");
   } else {
     return c.redirect('/oauth/google/error');
   }
