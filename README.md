@@ -19,3 +19,10 @@ Cloud Runにて稼働している様子やコンソールの確認は [こちら
 ## 参考
 
 * [GCPでVOICEVOXを動かす](https://zenn.dev/yunkai/articles/gcp-voicevox)
+
+
+# 実行ファイルのダウンロード
+
+実際にアプリをダウンロードしてインストールしてみたい場合にはこちらにアクセスしてください
+
+* [apk](https://climbing-pig.taptappun.workers.dev/download/apk) https://climbing-pig.taptappun.workers.dev/download/apk

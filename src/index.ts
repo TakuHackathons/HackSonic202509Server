@@ -14,7 +14,7 @@ app.get('/', (c) => {
 });
 
 app.get('/download/apk', (c) => {
-  return c.redirect('https://google.co.jp');
+  return c.redirect('https://pub-c6f0350ad3f742868c0442195330a327.r2.dev/ClimbIngPig.apk');
 });
 
 export default app;
