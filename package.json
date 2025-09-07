@@ -8,6 +8,7 @@
     "format": "prettier --config .prettierrc --write \"src/**/*.{ts,js}\""
   },
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "google-auth-library": "^10.3.0",
     "googleapis": "^159.0.0",
     "hono": "^4.9.6"
