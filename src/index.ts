@@ -1,13 +1,15 @@
 import { Hono } from 'hono';
 import { trimTrailingSlash } from 'hono/trailing-slash';
 import { cors } from 'hono/cors';
-import { googleRouter } from './routers/oauth/google';
+import { oauthGoogleRouter } from './routers/oauth/google';
+import { googleTasksRouter } from './routers/tasks/google';
 
 const app = new Hono({ strict: true });
 app.use(trimTrailingSlash());
 app.use('*', cors());
 
-app.route('/oauth/google', googleRouter);
+app.route('/oauth/google', oauthGoogleRouter);
+app.route('/tasks/google', googleTasksRouter);
 
 app.get('/', (c) => {
   return c.text('Hello Hono!');

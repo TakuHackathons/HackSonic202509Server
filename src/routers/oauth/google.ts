@@ -3,22 +3,22 @@ import { env } from 'hono/adapter';
 import crypto from 'crypto';
 import { GenerateAuthUrlOpts, OAuth2ClientOptions, OAuth2Client, Credentials } from 'google-auth-library';
 
-const googleRouter = new Hono();
+const oauthGoogleRouter = new Hono();
 
-googleRouter.get('/', (c) => {
+oauthGoogleRouter.get('/', (c) => {
   return c.json({ hello: 'oauth google Router' });
 });
 
-googleRouter.get('/error', (c) => {
+oauthGoogleRouter.get('/error', (c) => {
   return c.text('OAuth Failed.');
 });
 
-googleRouter.get('/usercheck', (c) => {
+oauthGoogleRouter.get('/usercheck', (c) => {
   const newUuid = crypto.randomUUID();
   return c.json({ userId: newUuid });
 });
 
-googleRouter.get('/auth', (c) => {
+oauthGoogleRouter.get('/auth', (c) => {
   const oauth2Client = getOAuth2Client(c);
   const oauthClientAuthUrlOptions: GenerateAuthUrlOpts = {
     access_type: 'offline',
@@ -27,7 +27,7 @@ googleRouter.get('/auth', (c) => {
   return c.redirect(oauth2Client.generateAuthUrl(oauthClientAuthUrlOptions));
 });
 
-googleRouter.get('/callback', async (c) => {
+oauthGoogleRouter.get('/callback', async (c) => {
   const oauth2Client = getOAuth2Client(c);
   const authCode = c.req.query('code');
   if (authCode) {
@@ -52,4 +52,4 @@ function getOAuth2Client(context: Context): OAuth2Client {
   return oauth2Client;
 }
 
-export { googleRouter };
+export { oauthGoogleRouter };
